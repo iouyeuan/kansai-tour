@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import ActivityTimeline from "@/components/ActivityTimeline";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { stays } from "@/lib/accommodationData";
 import { days, tripInfo } from "@/lib/itineraryData";
 
 export default function PrintView() {
@@ -29,7 +30,12 @@ export default function PrintView() {
         <p className="mt-2 text-sm">
           {tripInfo.carrier}　去程 11/15 KHH 06:55 → KIX 10:40　回程 11/20 KIX 11:30 → KHH
         </p>
-        <p className="mt-1 text-sm">住宿：{tripInfo.base}（南海堺站東口步行約 3 分鐘）</p>
+        <p className="mt-1 text-sm">住宿：{tripInfo.base}</p>
+        {stays.map((stay) => (
+          <p key={stay.id} className="mt-1 text-sm">
+            {stay.name}・{stay.nights}・{stay.access}
+          </p>
+        ))}
       </header>
       {days.map((day) => (
         <section key={day.id} className="print-break mt-8">

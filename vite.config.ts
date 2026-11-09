@@ -19,7 +19,7 @@ function githubPagesSpa(): Plugin {
 <html lang="zh-Hant">
   <head>
     <meta charset="utf-8" />
-    <title>關西六日・和歌山與京都紅葉</title>
+    <title>關西六日・和歌山、京都與高野山</title>
     <script>
       (function () {
         var pathSegmentsToKeep = 1;

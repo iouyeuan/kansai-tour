@@ -94,7 +94,7 @@ export default function DayDetail({ params }: { params: { id?: string } }) {
           </Link>
         </div>
         <InteractiveMap days={[day.id]} className="h-80" />
-        <p className="mt-2 text-sm text-muted">{dayRouteNotes[day.id]} 實線是電車，虛線是步行或可選。</p>
+        <p className="mt-2 text-sm text-muted">{dayRouteNotes[day.id]} 實線是電車、纜車或巴士，虛線是步行或可選。</p>
       </section>
 
       <nav className="mt-8 flex justify-between gap-3 border-t border-line pt-6 text-sm" aria-label="前後一天">

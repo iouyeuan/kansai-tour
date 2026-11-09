@@ -1,49 +1,85 @@
+import type { MapMarker } from "./types";
 import { markerById } from "./mapMarkersData";
 
-const hotel = markerById("hotel");
+export interface Stay {
+  id: string;
+  name: string;
+  nameJa: string;
+  nights: string;
+  address: string;
+  addressZh: string;
+  access: string;
+  phone: string;
+  website: string;
+  checkIn: string;
+  checkOut: string;
+  breakfast: string;
+  lat: number;
+  lng: number;
+}
 
-export const accommodation = {
-  name: "東橫INN大阪堺駅前",
-  nameJa: "東横INN大阪堺駅前",
-  address: "〒590-0985 大阪府堺市堺区戎島町2丁目74番地1",
-  addressZh: "大阪府堺市堺區戎島町 2 丁目 74 番地 1",
-  access: "南海本線「堺」駅東口，步行約 3 分鐘",
-  phone: "072-225-5645",
-  website: "https://www.toyoko-inn.com/search/detail/00366/",
-  checkIn: "15:00 起",
-  checkOut: "10:00",
-  breakfast: "免費飯糰，約 6:30–9:00。6:00 起提供輕食。",
-  nights: "11/15（日）入住，11/20（五）早上退房，共五晚",
-  lat: hotel.lat,
-  lng: hotel.lng,
-  areaTitle: "為什麼住堺，不住京都",
-  areaBody:
-    "京都紅葉季的早晨要早到，但晚上把行李留在南海堺站，隔天去和歌山或京都都不用搬家。堺站往難波約 10 多分鐘，往關西機場的空港急行約 40–50 分，比住在京都車站再跑機場單純。",
-  blocks: [
-    {
-      title: "落地當天",
-      body: "10:40 降落，出關後直達飯店大約中午。15:00 前只能寄行李。寄完再決定去大仙陵或難波，不用把箱子拖去道頓堀。",
-    },
-    {
-      title: "清晨出發",
-      body: "第 2 天到第 6 天都是 07:30–08:00 左右出門。先吃飯店飯糰，再走 3 分鐘進站。回程若超過 17:00 才從京都移動，到堺多半是 18:30–19:30。",
-    },
-    {
-      title: "附近怎麼吃",
-      body: "不想再搭車時，堺站東口與大小路周邊就能吃拉麵。一蘭、金龍留在人已經到難波的晚上，不為了這兩家專程出門。",
-    },
-  ],
-  warnings: [
-    "住宿站是南海「堺」，不是 JR「堺市」。JR 堺市站在東南方，走路會錯。",
-    "入住用護照與訂房時留下的姓名。確認信留在自己的信箱，不必抄到這個行程裡。",
-    "入住與退房時間以飯店當日公告為準。上面的 15:00／10:00 是官網公開時段。",
-  ],
+function stayFrom(id: string, fields: Omit<Stay, "id" | "lat" | "lng">): Stay {
+  const marker: MapMarker = markerById(id);
+  return { id, lat: marker.lat, lng: marker.lng, ...fields };
+}
+
+const breakfast = "免費早餐約 6:30–9:00。6:00–6:30 只有麵包和咖啡。";
+
+export const stays: Stay[] = [
+  stayFrom("hotel-namba", {
+    name: "東橫INN大阪難波日本橋",
+    nameJa: "東横INN大阪なんば日本橋",
+    nights: "11/15（日）入住，11/18（三）早上退房，三晚",
+    address: "〒556-0005 大阪府大阪市浪速区日本橋4丁目11番4号",
+    addressZh: "大阪府大阪市浪速區日本橋 4 丁目 11 番地 4",
+    access: "南海「難波」站步行約 6 分鐘。官網同時寫堺筋線惠美須町站 1-B 出口約 5 分、御堂筋線難波站 4 號出口約 8 分。",
+    phone: "06-7668-1045",
+    website: "https://www.toyoko-inn.com/search/detail/00254/",
+    checkIn: "15:00 起",
+    checkOut: "10:00",
+    breakfast,
+  }),
+  stayFrom("hotel-sakai", {
+    name: "東橫INN大阪堺東駅",
+    nameJa: "東横INN堺東駅",
+    nights: "11/18（三）入住，11/20（五）早上退房，兩晚",
+    address: "〒590-0952 大阪府堺市堺区市之町東6丁2-14",
+    addressZh: "大阪府堺市堺區市之町東 6 丁 2 番地 14",
+    access:
+      "南海高野線「堺東」站西口。官網寫步行約 6 分，部分訂房頁寫約 7 分。官網另寫到南海本線「堺」站東口約 17 分；這不是已實測的距離，回機場仍以巴士為主。",
+    phone: "072-282-1045",
+    website: "https://www.toyoko-inn.com/search/detail/00071/",
+    checkIn: "15:00 起",
+    checkOut: "10:00",
+    breakfast,
+  }),
+];
+
+export const accommodationIntro = {
+  eyebrow: "五晚，兩間飯店",
+  title: "先難波日本橋，再換堺東",
+  body: "11/15 到 11/18 早上住東橫INN大阪難波日本橋，落地與前兩天京都都不用先跑去堺。11/18 傍晚改住東橫INN大阪堺東駅，第 5 天高野山與第 6 天回機場都從高野線堺東出發。不再全程住堺駅前。",
 };
 
-export const stayFacts = [
-  { label: "入住", value: accommodation.checkIn },
-  { label: "退房", value: accommodation.checkOut },
-  { label: "早餐", value: accommodation.breakfast },
-  { label: "電話", value: accommodation.phone },
-  { label: "住宿", value: accommodation.nights },
+export const stayBlocks = [
+  {
+    title: "落地當天",
+    body: "10:40 到關西機場，南海進難波。15:00 前先把行李寄在難波日本橋的櫃台，下午留在心齋橋、道頓堀與飯店旁的日本橋。不必為了入住再去堺。",
+  },
+  {
+    title: "11/18 換房",
+    body: "早上可先從難波日本橋退房。行李放櫃台或隨身去京都。傍晚回南海難波取行李，改搭高野線到堺東。入住 15:00 起。行李如果很重，退房後可先送到堺東再北上，多一趟短程，當天櫃台是否收行李以現場為準。",
+  },
+  {
+    title: "高野山與回程",
+    body: "後兩晚的站是高野線堺東，不是南海本線堺。回機場若搭巴士，那是南海巴士的付費公車，停熊野小学校前，不是飯店的免費接駁。",
+  },
+];
+
+export const stayWarnings = [
+  "兩間都叫東橫INN，站不一樣。11/18 傍晚以前回難波日本橋，之後回堺東。",
+  "堺東這間對的是南海高野線「堺東」。南海本線「堺」與 JR「堺市」都是別的站。",
+  "難波這間對的是南海難波。JR 難波在另一邊，不要走到那裡才開始找飯店。",
+  "確認信與入住姓名留在自己的信箱。這個行程不放訂房資料。",
+  "15:00 入住、10:00 退房是兩間官網目前公開的時段，仍以當天櫃台為準。",
 ];

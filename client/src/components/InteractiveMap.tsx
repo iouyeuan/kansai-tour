@@ -23,6 +23,15 @@ function makeIcon(color: string, active: boolean) {
   });
 }
 
+function coversDistance(points: [number, number][]) {
+  if (points.length < 2) return false;
+  const lats = points.map((point) => point[0]);
+  const lngs = points.map((point) => point[1]);
+  const latSpan = Math.max(...lats) - Math.min(...lats);
+  const lngSpan = Math.max(...lngs) - Math.min(...lngs);
+  return latSpan > 0.05 || lngSpan > 0.05;
+}
+
 function Frame({
   filterKey,
   activeId,
@@ -35,18 +44,37 @@ function Frame({
   const map = useMap();
 
   useEffect(() => {
-    const active = points.length && activeId ? mapMarkers.find((marker) => marker.id === activeId) : undefined;
-    if (active) {
-      map.flyTo([active.lat, active.lng], 15, { duration: 0.55 });
-      return;
-    }
-    if (points.length === 1) {
-      map.setView(points[0], 14);
-      return;
-    }
-    if (points.length > 1) {
-      map.fitBounds(points, { padding: [32, 32], maxZoom: 13 });
-    }
+    let cancelled = false;
+
+    const place = () => {
+      if (cancelled) return;
+      map.invalidateSize();
+      const active = points.length && activeId ? mapMarkers.find((marker) => marker.id === activeId) : undefined;
+      // A single selected pin can zoom in. A day that runs from Sakai to Koyasan
+      // has to keep every marker inside the frame, or the mountain drops off the map.
+      if (active && !coversDistance(points)) {
+        map.flyTo([active.lat, active.lng], 15, { duration: 0.45 });
+        return;
+      }
+      if (points.length === 1) {
+        map.setView(points[0], 14);
+        return;
+      }
+      if (points.length > 1) {
+        map.fitBounds(points, { padding: [28, 28], maxZoom: 13, animate: false });
+      }
+    };
+
+    let timer = 0;
+    const frame = window.requestAnimationFrame(() => {
+      place();
+      timer = window.setTimeout(place, 80);
+    });
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
+    };
   }, [map, filterKey, activeId, points]);
 
   return null;
@@ -54,6 +82,7 @@ function Frame({
 
 export default function InteractiveMap({
   days,
+  markerIds,
   activeId,
   onSelect,
   hideOptional = false,
@@ -61,25 +90,31 @@ export default function InteractiveMap({
   className,
 }: {
   days?: number[];
+  markerIds?: string[];
   activeId?: string;
   onSelect?: (id: string) => void;
   hideOptional?: boolean;
   scrollWheel?: boolean;
   className?: string;
 }) {
-  const filterKey = days?.length ? [...days].sort((a, b) => a - b).join(",") : "all";
+  const dayKey = days?.length ? [...days].sort((a, b) => a - b).join(",") : "all";
+  const idKey = markerIds?.length ? [...markerIds].sort().join(",") : "";
+  const filterKey = idKey ? `${dayKey}|${idKey}` : dayKey;
   const visible = useMemo(() => {
-    const wanted = filterKey === "all" ? null : new Set(filterKey.split(",").map(Number));
-    const base = wanted
-      ? mapMarkers.filter((marker) => marker.days.some((day) => wanted.has(day)))
-      : mapMarkers;
+    const dayPart = filterKey.split("|")[0];
+    const wanted = dayPart === "all" ? null : new Set(dayPart.split(",").map(Number));
+    const byDay = wanted ? mapMarkers.filter((marker) => marker.days.some((day) => wanted.has(day))) : mapMarkers;
+    const allowed = idKey ? new Set(idKey.split(",")) : null;
+    const base = allowed ? byDay.filter((marker) => allowed.has(marker.id)) : byDay;
     return hideOptional ? base.filter((marker) => !marker.optional) : base;
-  }, [filterKey, hideOptional]);
+  }, [filterKey, hideOptional, idKey]);
   const routes = useMemo(() => {
-    if (filterKey === "all") return [];
-    const wanted = filterKey.split(",").map(Number);
+    if (idKey) return [];
+    const dayPart = filterKey.split("|")[0];
+    if (dayPart === "all") return [];
+    const wanted = dayPart.split(",").map(Number);
     return routesForDays(wanted).filter((route) => (hideOptional ? !route.optional : true));
-  }, [filterKey, hideOptional]);
+  }, [filterKey, hideOptional, idKey]);
   const points = useMemo<[number, number][]>(
     () => [
       ...visible.map((marker) => [marker.lat, marker.lng] as [number, number]),
@@ -90,12 +125,7 @@ export default function InteractiveMap({
 
   return (
     <div className={cn("relative z-0 overflow-hidden rounded-3xl border border-line bg-paper-2", className)}>
-      <MapContainer
-        center={[34.72, 135.5]}
-        zoom={9}
-        scrollWheelZoom={scrollWheel}
-        className="h-full w-full"
-      >
+      <MapContainer center={[34.72, 135.5]} zoom={9} scrollWheelZoom={scrollWheel} className="h-full w-full">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"

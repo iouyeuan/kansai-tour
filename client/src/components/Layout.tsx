@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, Printer, X } from "lucide-react";
+import { tripInfo } from "@/lib/itineraryData";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -99,7 +100,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       </main>
       <footer className="border-t border-line px-4 py-8 text-sm text-muted">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <p>2026/11/15–11/20・高雄往返關西・住南海堺站前。</p>
+          <p>
+            {tripInfo.datesLabel}・高雄往返關西・{tripInfo.base}。
+          </p>
           <p>車資與門票都是參考，以當天閘門與入口公告為準。</p>
         </div>
       </footer>
