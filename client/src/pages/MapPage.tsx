@@ -39,7 +39,7 @@ export default function MapPage() {
     <div>
       <h1 className="font-serif text-4xl font-semibold">地圖</h1>
       <p className="mt-2 max-w-2xl text-sm leading-7 text-muted">
-        先選一天，才會畫出當天的順序。實線是電車，虛線是步行或可選。全部日時只顯示地點。座標來自 OpenStreetMap，線不是真實軌道。
+        先選一天，才會畫出當天的順序。實線是電車、纜車或巴士，虛線是步行或可選。全部日時只顯示地點。座標來自 OpenStreetMap 與飯店官網，線不是真實軌道。
       </p>
       <div className="no-print mt-4 flex flex-wrap gap-2">
         <FilterButton pressed={selectedDay === 0} onClick={() => chooseDay(0)}>

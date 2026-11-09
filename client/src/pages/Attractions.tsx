@@ -12,7 +12,7 @@ export default function Attractions() {
     <div>
       <h1 className="font-serif text-4xl font-semibold">景點</h1>
       <p className="mt-3 max-w-3xl leading-8">
-        必去的只有每天真正要進的地方。可選是有餘力再加。銀閣寺是備案。清水寺寫在這裡，是為了提醒這次不排。
+        必去的只有每天真正要進的地方。可選是有餘力再加。銀閣寺是備案。清水寺寫在這裡，是為了提醒這次不排。嵐山已從行程拿掉，第 5 天改去高野山。
       </p>
       <div className="no-print mt-4 flex flex-wrap gap-2">
         {attractionRoles.map((item) => (

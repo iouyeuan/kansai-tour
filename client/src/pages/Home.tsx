@@ -45,9 +45,7 @@ export default function Home() {
         <aside className="rounded-3xl border border-line bg-beni px-5 py-6 text-paper">
           <p className="font-serif text-5xl leading-none">11/15</p>
           <p className="mt-1 font-serif text-2xl">– 11/20</p>
-          <p className="mt-4 text-sm leading-7 text-paper/90">
-            六天五夜。和歌山一天看城，京都三天看楓與銀杏，最後一天只負責準時起飛。全程不排清水寺。
-          </p>
+          <p className="mt-4 text-sm leading-7 text-paper/90">{tripInfo.aside}</p>
         </aside>
       </section>
 

@@ -9,7 +9,7 @@ export default function Transport() {
     <article>
       <h1 className="font-serif text-4xl font-semibold">交通</h1>
       <p className="mt-3 max-w-3xl leading-8">
-        這六天沒有租車，也沒有渡輪。全部用 IC 卡：南海、大阪地鐵御堂筋線、阪急、JR。金額是參考，特急券與紅葉季門票分開算。
+        沒有租車。11/16–18 用 KANSAI RAILWAY PASS LITE，其餘天用 ICOCA。京都走京阪或阪急，不走 JR 與京都市營地鐵。高野山的山內巴士另買。金額是參考，特急券與紅葉季門票分開算。
       </p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -22,7 +22,7 @@ export default function Transport() {
       </div>
 
       <section className="mt-10">
-        <h2 className="font-serif text-3xl">在堺站先看終點</h2>
+        <h2 className="font-serif text-3xl">先看終點</h2>
         <div className="mt-4 overflow-x-auto rounded-3xl border border-line">
           <table className="w-full min-w-[36rem] text-left text-sm">
             <thead className="bg-ink text-paper">
@@ -74,7 +74,7 @@ export default function Transport() {
       </div>
 
       <section className="mt-12">
-        <h2 className="font-serif text-3xl">容易搭錯的四件事</h2>
+        <h2 className="font-serif text-3xl">容易搭錯的幾件事</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {mistakes.map((item) => (
             <article key={item.title} className="rounded-3xl border border-line p-4">
